@@ -44,8 +44,8 @@ namespace plotterCar {
      * drow arc
      */
     //* @param diameter diameter(mm), eg:100
-    //* @param diameter diameter(°), eg:180
-    //% block="drow arc diameter%distance|digree%digree"
+    //* @param digree digree(°), eg:180
+    //% block="drow arc diameter=%distance|digree=%digree"
 	export function curve (diameter: number, digree: number) {
 		let insideStep;
 		let outsideStep;
@@ -63,6 +63,11 @@ namespace plotterCar {
 		    execMotor(insideStep, outsideStep)
 	    }
 	}
+    /**
+     * rotate a car
+     */
+    //* @param digree digree(°), eg:180
+    //% block="rotate a car digree=%digree"
 	export function Rotate (digree: number) {
 	    execMotor(digree / 360 * circleParStep, digree / -360 * circleParStep)
 	}
