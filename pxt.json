@@ -6,8 +6,8 @@
         "microphone": "*"
     },
     "files": [
-        "main.ts",
-        "README.md"
+        "README.md",
+        "plotterCar.ts"
     ],
     "testFiles": [
         "test.ts"
