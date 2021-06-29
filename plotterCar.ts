@@ -40,6 +40,12 @@ namespace plotterCar {
 	export function Straight (distance: number) {
 	    execMotor(distance * mmParStep, distance * mmParStep)
 	}
+    /**
+     * drow arc
+     */
+    //* @param diameter diameter(mm), eg:100
+    //* @param diameter diameter(°), eg:180
+    //% block="drow arc diameter%distance|digree%digree"
 	export function curve (diameter: number, digree: number) {
 		let insideStep;
 		let outsideStep;
