@@ -8,6 +8,7 @@ namespace plotterCar {
 	let lastLeft = 0;
 
 	let backLashCount = 4 * 8;
+    let waitStep = 20;
 
 	let pi = 3.14159
 	let tredMm = 80.1
@@ -17,8 +18,8 @@ namespace plotterCar {
 	let penUpDigree = 20
 	let penDownDigree = 40
 
-	function step_wait () {
-	    control.waitMicros(350)
+	function step_wait (count:number) {
+        for(let i=0;i<count;i++) control.waitMicros(50);
 	}
 	function motor_l (ap: number, am: number, bp: number, bm: number) {
 	    pins.digitalWritePin(DigitalPin.P0, ap)
@@ -81,7 +82,7 @@ namespace plotterCar {
 	    motor_l((step_l >> 3) & 0x01, (step_l >> 2) & 0x01, (step_l >> 1) & 0x01, (step_l >> 0) & 0x01);
 		step_r = motor_step[nowStepR];
 	    motor_r((step_r >> 3) & 0x01, (step_r >> 2) & 0x01, (step_r >> 1) & 0x01, (step_r >> 0) & 0x01);
-	    step_wait()
+	    step_wait(waitStep)
 
 	// バックラッシュ処理
 	    if (lastLeft * leftStep <= 0) {
@@ -93,7 +94,7 @@ namespace plotterCar {
 	            }
 	            step_l = motor_step[nowStepL]
 	            motor_l((step_l >> 3) & 0x01, (step_l >> 2) & 0x01, (step_l >> 1) & 0x01, (step_l >> 0) & 0x01);
-	            step_wait()
+	            step_wait(waitStep)
 	        }
 	    }
 	    if (lastRight * rightStep <= 0) {
@@ -105,7 +106,7 @@ namespace plotterCar {
 	            }
 	            step_r = motor_step[nowStepR]
 	            motor_r((step_r >> 3) & 0x01, (step_r >> 2) & 0x01, (step_r >> 1) & 0x01, (step_r >> 0) & 0x01);
-	            step_wait()
+	            step_wait(waitStep)
 	        }
 	    }
 
@@ -116,7 +117,7 @@ namespace plotterCar {
 	        step_r = motor_step[mod(nowStepR + (rightStep * (index / base_step)), 8)];
 	        motor_l((step_l >> 3) & 0x01, (step_l >> 2) & 0x01, (step_l >> 1) & 0x01, (step_l >> 0) & 0x01);
 	        motor_r((step_r >> 3) & 0x01, (step_r >> 2) & 0x01, (step_r >> 1) & 0x01, (step_r >> 0) & 0x01);
-	        step_wait()
+	        step_wait(waitStep)
 	    }
 	    nowStepL = mod(nowStepL + leftStep, 8);
 	    nowStepR = mod(nowStepR + rightStep, 8);
