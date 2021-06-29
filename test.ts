@@ -1,1 +1,6 @@
-// テストはここに来ます。このパッケージが拡張機能として使用されるときにはコンパイルされません。
+input.onButtonPressed(Button.A, function () {
+    plotterCar.Straight(100)
+})
+input.onButtonPressed(Button.B, function () {
+    plotterCar.Straight(-100)
+})
