@@ -1,4 +1,4 @@
-//% color=#0fbc11 icon="\u270f" block="plotter car"
+//% color=#0c0c0c icon="\u270f" block="plotter car"
 namespace plotterCar {
 	let motor_step:number[] = [0x1001, 0x1000, 0x1010, 0x0010, 0x0110, 0x0100, 0x0101, 0x0001];
 
@@ -32,6 +32,11 @@ namespace plotterCar {
 	    pins.digitalWritePin(DigitalPin.P14, bp)
 	    pins.digitalWritePin(DigitalPin.P16, bm)
 	}
+    /**
+     * drow Straight line
+     */
+    //* @param distance line length(mm), eg:50
+    //% block="drow straight line length=%distance"
 	export function Straight (distance: number) {
 	    execMotor(distance * mmParStep, distance * mmParStep)
 	}
