@@ -1,19 +1,19 @@
 //% color=#0c0c0c icon="\u270f" block="plotter car"
 namespace plotterCar {
-	let motor_step:number[] = [0x1001, 0x1000, 0x1010, 0x0010, 0x0110, 0x0100, 0x0101, 0x0001];
+	let motor_step:number[] = [0b1001, 0b1000, 0b1010, 0b0010, 0b0110, 0b0100, 0b0101, 0b0001];
 
 	let nowStepL=0;
 	let nowStepR = 0;
 	let lastRight = 0;
 	let lastLeft = 0;
 
-	let backLashCount = 4 * 8;
+	let backLashCount = 8;
     let waitStep = 20;
 
 	let pi = 3.14159
-	let tredMm = 80.1
-	let mmParStep = 13.8 * 8
-	let circleParStep = tredMm * pi * mmParStep
+	let tredMm = 81.4
+	let mmParStep = 0.1195;
+	let circleParStep = tredMm * pi / mmParStep
 
 	let penUpDigree = 20
 	let penDownDigree = 40
@@ -28,10 +28,10 @@ namespace plotterCar {
 	    pins.digitalWritePin(DigitalPin.P13, bm)
 	}
 	function motor_r (ap: number, am: number, bp: number, bm: number) {
-	    pins.digitalWritePin(DigitalPin.P8, ap)
-	    pins.digitalWritePin(DigitalPin.P12, am)
-	    pins.digitalWritePin(DigitalPin.P14, bp)
-	    pins.digitalWritePin(DigitalPin.P16, bm)
+	    pins.digitalWritePin(DigitalPin.P16, ap)
+	    pins.digitalWritePin(DigitalPin.P14, am)
+	    pins.digitalWritePin(DigitalPin.P12, bp)
+	    pins.digitalWritePin(DigitalPin.P8, bm)
 	}
     /**
      * drow Straight line
@@ -39,7 +39,7 @@ namespace plotterCar {
     //* @param distance line length(mm), eg:50
     //% block="drow straight line length=%distance"
 	export function Straight (distance: number) {
-	    execMotor(distance * mmParStep, distance * mmParStep)
+	    execMotor(distance / mmParStep, distance / mmParStep)
 	}
     /**
      * drow arc
