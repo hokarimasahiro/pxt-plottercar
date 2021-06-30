@@ -55,8 +55,8 @@ namespace plotterCar {
 	        outsideStep = (circleParStep + circleParStep) * (digree / 360)
 	        insideStep = 0
 	    } else {
-	        outsideStep = (tredMm + Math.abs(diameter)) * pi * mmParStep * (digree / 360)
-	        insideStep = (Math.abs(diameter) - tredMm) * pi * mmParStep * (digree / 360)
+	        outsideStep = (tredMm + Math.abs(diameter)) * pi / mmParStep * (digree / 360)
+	        insideStep = (Math.abs(diameter) - tredMm) * pi / mmParStep * (digree / 360)
 	    }
 	    if (diameter >= 0) {
 		    execMotor(outsideStep, insideStep)
