@@ -1,4 +1,4 @@
-//% color=#3080c0 icon="\u2712" block="plotter car"
+//% color=#3080c0 icon="\u270d" block="plotter car"
 namespace plotterCar {
 	let motor_step:number[] = [0b1001, 0b1000, 0b1010, 0b0010, 0b0110, 0b0100, 0b0101, 0b0001];
 
