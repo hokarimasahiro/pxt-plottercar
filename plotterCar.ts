@@ -15,9 +15,11 @@ namespace plotterCar {
 	let lastLeft = 0;
 
 	let backLashCount = 8;
-    let waitStep = 20;
-    let accelerationStep = 1;
-    let lowSpeed = 200;
+    let normalSpeed = 1000;     // Hz
+    let lowSpeed = 100;         // Hz
+    let accelerationStep = 10;  // Hz
+    let waitUnit = 50 ;          // uS
+    let waitStep = (1 / normalSpeed) * 1000000 / waitUnit ;          // uS
 
 	let pi = 3.14159265359;
 	let tredMm = 81.4;
@@ -25,7 +27,7 @@ namespace plotterCar {
 	let circleParStep = tredMm * pi * stepParMm
 
 	function step_wait (count:number) {
-        for(let i=0;i<count;i++) control.waitMicros(50);
+        for(let i=0;i<count;i++) control.waitMicros(waitUnit);
 	}
 	function motor_l (ap: number, am: number, bp: number, bm: number) {
 	    pins.digitalWritePin(DigitalPin.P0, ap)
@@ -89,9 +91,9 @@ namespace plotterCar {
 	    execMotor(digree / 360 * circleParStep, digree / -360 * circleParStep)
 	}
 	function execMotor (leftStep: number, rightStep: number) {
-		let base_step = 0;
-		let step_l,step_r;
-        let waitCount;
+		let base_step:number;
+		let step_l:number,step_r:number;
+        let speed:number,waitCount:number;
 
 	// モーター起動
 		step_l = motor_step[nowStepL];
@@ -112,8 +114,8 @@ namespace plotterCar {
 	        motor_l((step_l >> 3) & 0x01, (step_l >> 2) & 0x01, (step_l >> 1) & 0x01, (step_l >> 0) & 0x01);
 	        motor_r((step_r >> 3) & 0x01, (step_r >> 2) & 0x01, (step_r >> 1) & 0x01, (step_r >> 0) & 0x01);
 
-            waitCount = Math.max(lowSpeed - ((index - 1) * accelerationStep),lowSpeed - ((base_step - index) * accelerationStep));
-            waitCount = Math.max(waitCount, waitStep);
+            speed = Math.max(index * accelerationStep,(base_step - index + 1) * accelerationStep);
+            waitCount = Math.max((1 / speed) * 1000000 / waitUnit, waitStep);
 
 	        step_wait(waitCount)
 	    }
