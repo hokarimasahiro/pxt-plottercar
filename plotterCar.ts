@@ -10,10 +10,10 @@ namespace plotterCar {
 	let backLashCount = 8;
     let waitStep = 20;
 
-	let pi = 3.14159
+	let pi = 3.14159265359
 	let tredMm = 81.4
-	let mmParStep = 0.1195;
-	let circleParStep = tredMm * pi / mmParStep
+	let stepParMm = 8.3682;
+	let circleParStep = tredMm * pi * stepParMm
 
 	let penUpDigree = 20
 	let penDownDigree = 40
@@ -39,7 +39,7 @@ namespace plotterCar {
     //* @param distance line length(mm), eg:50
     //% block="drow straight line length=%distance"
 	export function Straight (distance: number) {
-	    execMotor(distance / mmParStep, distance / mmParStep)
+	    execMotor(distance * stepParMm, distance * stepParMm)
 	}
     /**
      * drow arc
@@ -55,8 +55,8 @@ namespace plotterCar {
 	        outsideStep = (circleParStep + circleParStep) * (digree / 360)
 	        insideStep = 0
 	    } else {
-	        outsideStep = (tredMm + Math.abs(diameter)) * pi / mmParStep * (digree / 360)
-	        insideStep = (Math.abs(diameter) - tredMm) * pi / mmParStep * (digree / 360)
+	        outsideStep = (tredMm + Math.abs(diameter)) * pi * stepParMm * (digree / 360)
+	        insideStep = (Math.abs(diameter) - tredMm) * pi * stepParMm * (digree / 360)
 	    }
 	    if (diameter >= 0) {
 		    execMotor(outsideStep, insideStep)
