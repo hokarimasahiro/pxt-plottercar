@@ -34,6 +34,16 @@ namespace plotterCar {
 	    pins.digitalWritePin(DigitalPin.P8, bm)
 	}
     /**
+     * set ploterCar parameter
+     */
+    //* @param step step par mm, eg:8.37
+    //* @param tred [mm], eg:81.4
+    //% block="set ploterCar parameter step=%step|tred=%tred"
+    export function setParameter(step:number=8.37,tred:number=81.4){
+        if (step != 0) stepParMm = step;
+        if (tred != 0) tredMm = tred;
+    }
+    /**
      * drow Straight line
      */
     //* @param distance line length(mm), eg:50
