@@ -17,7 +17,7 @@ namespace plotterCar {
 	let backLashCount = 8;
     let normalSpeed = 1000;     // Hz
     let lowSpeed = 100;         // Hz
-    let accelerationStep = 10;  // Hz
+    let accelerationStep = 5;   // Hz
     let waitUnit = 50 ;          // uS
     let waitStep = (1 / normalSpeed) * 1000000 / waitUnit ;          // uS
 
