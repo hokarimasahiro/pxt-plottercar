@@ -17,7 +17,7 @@ namespace plotterCar {
 	let backLashCount = 8;
     let waitStep = 20;
     let accelerationStep = 10;
-    let lowSpeed = 200;
+    let lowSpeed = 2000;
 
 	let pi = 3.14159265359;
 	let tredMm = 81.4;
