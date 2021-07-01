@@ -1,6 +1,13 @@
 //% color=#3080c0 icon="\u270d" block="plotter car"
 namespace plotterCar {
-	let motor_step:number[] = [0b1001, 0b1000, 0b1010, 0b0010, 0b0110, 0b0100, 0b0101, 0b0001];
+	let motor_step:number[] = [0b1001, // A, -B
+                               0b1000, // A
+                               0b1010, // A, B
+                               0b0010, // B
+                               0b0110, // B,-A
+                               0b0100, // -A
+                               0b0101, // -A,-B
+                               0b0001];// -B
 
 	let nowStepL=0;
 	let nowStepR = 0;
@@ -9,14 +16,13 @@ namespace plotterCar {
 
 	let backLashCount = 8;
     let waitStep = 20;
+    let accelerationStep = 10;
+    let lowSpeed = 200;
 
-	let pi = 3.14159265359
-	let tredMm = 81.4
+	let pi = 3.14159265359;
+	let tredMm = 81.4;
 	let stepParMm = 8.37;
 	let circleParStep = tredMm * pi * stepParMm
-
-	let penUpDigree = 20
-	let penDownDigree = 40
 
 	function step_wait (count:number) {
         for(let i=0;i<count;i++) control.waitMicros(50);
@@ -84,8 +90,8 @@ namespace plotterCar {
 	}
 	function execMotor (leftStep: number, rightStep: number) {
 		let base_step = 0
-		let step_l;
-		let step_r;
+		let step_l,step_r;
+        let waitCount;
 
 	// モーター起動
 		step_l = motor_step[nowStepL];
@@ -95,7 +101,34 @@ namespace plotterCar {
 	    step_wait(waitStep)
 
 	// バックラッシュ処理
-	    if (lastLeft * leftStep <= 0) {
+        backlashProc(leftStep,rightStep);
+
+    // メイン処理
+	    base_step = Math.max(Math.abs(leftStep), Math.abs(rightStep))  // 外周のステップ数
+
+	    for (let index = 1; index <= base_step; index++) {
+	        step_l = motor_step[mod(nowStepL + (leftStep * (index / base_step)), 8)];
+	        step_r = motor_step[mod(nowStepR + (rightStep * (index / base_step)), 8)];
+	        motor_l((step_l >> 3) & 0x01, (step_l >> 2) & 0x01, (step_l >> 1) & 0x01, (step_l >> 0) & 0x01);
+	        motor_r((step_r >> 3) & 0x01, (step_r >> 2) & 0x01, (step_r >> 1) & 0x01, (step_r >> 0) & 0x01);
+
+            waitCount = Math.max(lowSpeed - ((index - 1) * accelerationStep),lowSpeed - ((base_step - index) * accelerationStep));
+            waitCount = Math.max(waitCount, waitStep);
+
+	        step_wait(waitCount)
+	    }
+	    nowStepL = mod(nowStepL + leftStep, 8);
+	    nowStepR = mod(nowStepR + rightStep, 8);
+
+	// モーター停止
+	    motor_l(0, 0, 0, 0)
+	    motor_r(0, 0, 0, 0)
+	}
+    function backlashProc(leftStep:number,rightStep:number){
+        let step_l:number,step_r:number;
+    
+	    // バックラッシュ処理
+	    if (lastLeft * leftStep <= 0) {     // 動作方向が前回と変わっていたらバックラッシュ処理をする
 	        for (let index = 0; index < backLashCount; index++) {
 	            if (leftStep > 0) {
 					nowStepL = (nowStepL + 1) % 8;
@@ -107,7 +140,7 @@ namespace plotterCar {
 	            step_wait(waitStep)
 	        }
 	    }
-	    if (lastRight * rightStep <= 0) {
+	    if (lastRight * rightStep <= 0) {     // 動作方向が前回と変わっていたらバックラッシュ処理をする
 	        for (let index = 0; index < backLashCount; index++) {
 	            if (rightStep > 0) {
 					nowStepR = (nowStepR + 1) % 8;
@@ -120,31 +153,14 @@ namespace plotterCar {
 	        }
 	    }
 
-	    base_step = Math.max(Math.abs(leftStep), Math.abs(rightStep))  // 外周のステップ数
-
-	    for (let index = 1; index <= base_step; index++) {
-	        step_l = motor_step[mod(nowStepL + (leftStep * (index / base_step)), 8)];
-	        step_r = motor_step[mod(nowStepR + (rightStep * (index / base_step)), 8)];
-	        motor_l((step_l >> 3) & 0x01, (step_l >> 2) & 0x01, (step_l >> 1) & 0x01, (step_l >> 0) & 0x01);
-	        motor_r((step_r >> 3) & 0x01, (step_r >> 2) & 0x01, (step_r >> 1) & 0x01, (step_r >> 0) & 0x01);
-	        step_wait(waitStep)
-	    }
-	    nowStepL = mod(nowStepL + leftStep, 8);
-	    nowStepR = mod(nowStepR + rightStep, 8);
-
-	// モーター停止
-	    motor_l(0, 0, 0, 0)
-	    motor_r(0, 0, 0, 0)
-
-	// 今回動作状態保存
+    	// 今回動作状態保存
 	    if (leftStep != 0) {
 	        lastLeft = leftStep
 	    }
 	    if (rightStep != 0) {
 	        lastRight = rightStep
 	    }
-
-	}
+    }
 	function mod (n1: number, n2: number) : number {
 		if (n1 > 0) return n1 % n2;
 		else return (n1 % n2 + n2) % n2;
