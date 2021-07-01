@@ -12,7 +12,7 @@ namespace plotterCar {
 
 	let pi = 3.14159265359
 	let tredMm = 81.4
-	let stepParMm = 8.3682;
+	let stepParMm = 8.37;
 	let circleParStep = tredMm * pi * stepParMm
 
 	let penUpDigree = 20
