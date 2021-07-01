@@ -89,7 +89,7 @@ namespace plotterCar {
 	    execMotor(digree / 360 * circleParStep, digree / -360 * circleParStep)
 	}
 	function execMotor (leftStep: number, rightStep: number) {
-		let base_step = 0
+		let base_step = 0;
 		let step_l,step_r;
         let waitCount;
 
