@@ -89,10 +89,10 @@ namespace plotterCar {
 
                     waitCount = ((base_step / 255) / maxSpeed) * 1000000 / waitUnit;
                     step_wait(waitCount)
+                    basic.pause(0);
                 }
                 nowStepL = mod(nowStepL + continuousLeft, 8);
                 nowStepR = mod(nowStepR + continuousRight, 8);
-                basic.pause(0);
             }
         }
     })
