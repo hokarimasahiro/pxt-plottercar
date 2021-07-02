@@ -114,7 +114,7 @@ namespace plotterCar {
 	        motor_l((step_l >> 3) & 0x01, (step_l >> 2) & 0x01, (step_l >> 1) & 0x01, (step_l >> 0) & 0x01);
 	        motor_r((step_r >> 3) & 0x01, (step_r >> 2) & 0x01, (step_r >> 1) & 0x01, (step_r >> 0) & 0x01);
 
-            speed = Math.max(index * accelerationStep,(base_step - index + 1) * accelerationStep);
+            speed = Math.min(index * accelerationStep,(base_step - index + 1) * accelerationStep);
             waitCount = Math.max((1 / speed) * 1000000 / waitUnit, waitStep);
 
 	        step_wait(waitCount)
