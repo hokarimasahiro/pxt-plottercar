@@ -88,7 +88,7 @@ namespace plotterCar {
                     motor_r((step_r >> 3) & 0x01, (step_r >> 2) & 0x01, (step_r >> 1) & 0x01, (step_r >> 0) & 0x01);
 
                     waitCount = ((base_step / 1023) / maxSpeed) * 1000000 / waitUnit;
-                    step_wait(waitCount)
+//                    step_wait(waitCount)
                 }
                 nowStepL = mod(nowStepL + continuousLeft, 8);
                 nowStepR = mod(nowStepR + continuousRight, 8);
