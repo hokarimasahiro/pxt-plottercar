@@ -22,7 +22,7 @@ namespace plotterCar {
     let waitStep = (1 / normalSpeed) * 1000000 / waitUnit ;          // uS
 
 	let pi = 3.14159265359;
-	let tredMm = 81.0;
+	let tredMm = 81.8;
 	let stepParMm = 8.37;
 	let circleParStep = tredMm * pi * stepParMm
 
