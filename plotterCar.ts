@@ -51,8 +51,8 @@ namespace plotterCar {
     //* @param right right speed, eg:128
     //% block="continuous operation left=%left|right=%right"
     export function continuousOperation(left:number,right:number){
-        continuousLeft = (left > 255) ? 255 : (left < -255) ? -255 : left;
-        continuousRight = (right > 255) ? 255 : (right < -255) ? -255 : right;
+        continuousLeft = (left > 1023) ? 1023 : (left < -1023) ? -1023 : left;
+        continuousRight = (right > 1023) ? 1023 : (right < -1023) ? -1023 : right;
     }
     control.inBackground(function () {
 		let base_step:number;
@@ -87,12 +87,12 @@ namespace plotterCar {
                     motor_l((step_l >> 3) & 0x01, (step_l >> 2) & 0x01, (step_l >> 1) & 0x01, (step_l >> 0) & 0x01);
                     motor_r((step_r >> 3) & 0x01, (step_r >> 2) & 0x01, (step_r >> 1) & 0x01, (step_r >> 0) & 0x01);
 
-                    waitCount = ((base_step / 255) / maxSpeed) * 1000000 / waitUnit;
+                    waitCount = ((base_step / 1023) / maxSpeed) * 1000000 / waitUnit;
                     step_wait(waitCount)
-                    basic.pause(0);
                 }
                 nowStepL = mod(nowStepL + continuousLeft, 8);
                 nowStepR = mod(nowStepR + continuousRight, 8);
+                basic.pause(0);
             }
         }
     })
