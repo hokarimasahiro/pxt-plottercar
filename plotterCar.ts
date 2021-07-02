@@ -51,8 +51,8 @@ namespace plotterCar {
     //* @param right right speed, eg:128
     //% block="continuous operation left=%left|right=%right"
     export function continuousOperation(left:number,right:number){
-        continuousLeft = left;
-        continuousRight = right;
+        continuousLeft = (left > 255) ? 255 : (left < -255) ? -255 : left;
+        continuousRight = (right > 255) ? 255 : (right < -255) ? -255 : right;
     }
     control.inBackground(function () {
 		let base_step:number;
