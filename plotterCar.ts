@@ -14,7 +14,7 @@ namespace plotterCar {
 	let lastRight = 0;
 	let lastLeft = 0;
 
-	let backLashCount = 2;
+	let backLashCount = 1;
     let normalSpeed = 1000;     // Hz
     let lowSpeed = 100;         // Hz
     let accelerationStep = 5;   // Hz
@@ -22,7 +22,7 @@ namespace plotterCar {
     let waitStep = (1 / normalSpeed) * 1000000 / waitUnit ;          // uS
 
 	let pi = 3.14159265359;
-	let tredMm = 81.4;
+	let tredMm = 81.2;
 	let stepParMm = 8.37;
 	let circleParStep = tredMm * pi * stepParMm
 
