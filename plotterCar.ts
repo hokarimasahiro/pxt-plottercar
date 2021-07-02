@@ -14,7 +14,7 @@ namespace plotterCar {
 	let lastRight = 0;
 	let lastLeft = 0;
 
-	let backLashCount = 8;
+	let backLashCount = 4;
     let normalSpeed = 1000;     // Hz
     let lowSpeed = 100;         // Hz
     let accelerationStep = 5;   // Hz
