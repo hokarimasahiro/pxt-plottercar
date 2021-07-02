@@ -92,7 +92,7 @@ namespace plotterCar {
                 }
                 nowStepL = mod(nowStepL + continuousLeft, 8);
                 nowStepR = mod(nowStepR + continuousRight, 8);
-                basic.pause(0);
+//                basic.pause(0);
             }
         }
     })
