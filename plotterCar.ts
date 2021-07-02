@@ -16,10 +16,13 @@ namespace plotterCar {
 
 	let backLashCount = 1;
     let normalSpeed = 1000;     // Hz
+    let maxSpeed = 2500;        // Hz
     let lowSpeed = 100;         // Hz
     let accelerationStep = 5;   // Hz
-    let waitUnit = 50 ;          // uS
-    let waitStep = (1 / normalSpeed) * 1000000 / waitUnit ;          // uS
+    let waitUnit = 50 ;         // uS
+    let normalWaitCount = (1 / normalSpeed) * 1000000 / waitUnit ;
+    let continuousLeft=0;       // -255 to +255
+    let continuousRight= 0;     // -255 to +255
 
 	let pi = 3.14159265359;
 	let tredMm = 81.0;
@@ -42,6 +45,57 @@ namespace plotterCar {
 	    pins.digitalWritePin(DigitalPin.P8, bm)
 	}
     /**
+     * continuous operation
+     */
+    //* @param left left speed, eg:128
+    //* @param right right speed, eg:128
+    //% block="continuous operation left=%left|right=%right"
+    export function continuousOperation(left:number,right:number){
+        continuousLeft = left;
+        continuousRight = right;
+    }
+    control.inBackground(function () {
+		let base_step:number;
+		let step_l:number,step_r:number;
+        let speed:number,waitCount:number;
+
+        while (true) {
+            if ((continuousLeft == 0) && (continuousLeft == 0)){
+                basic.pause(10)
+            } else {
+                if (continuousLeft == 0){
+                    motor_l(0,0,0,0);       // モーター停止
+                } else {
+                    // モーター起動
+                    step_l = motor_step[nowStepL];
+                    motor_l((step_l >> 3) & 0x01, (step_l >> 2) & 0x01, (step_l >> 1) & 0x01, (step_l >> 0) & 0x01);
+                }
+                if (continuousRight == 0){
+                    motor_r(0,0,0,0);       // モーター停止
+                } else {
+                    // モーター起動
+                    step_r = motor_step[nowStepR];
+                    motor_r((step_r >> 3) & 0x01, (step_r >> 2) & 0x01, (step_r >> 1) & 0x01, (step_r >> 0) & 0x01);
+                }
+
+                // メイン処理
+                base_step = Math.max(Math.abs(continuousLeft), Math.abs(continuousRight))  // 外周のステップ数
+
+                for (let index = 1; index <= base_step; index++) {
+                    step_l = motor_step[mod(nowStepL + (continuousLeft * (index / base_step)), 8)];
+                    step_r = motor_step[mod(nowStepR + (continuousRight * (index / base_step)), 8)];
+                    motor_l((step_l >> 3) & 0x01, (step_l >> 2) & 0x01, (step_l >> 1) & 0x01, (step_l >> 0) & 0x01);
+                    motor_r((step_r >> 3) & 0x01, (step_r >> 2) & 0x01, (step_r >> 1) & 0x01, (step_r >> 0) & 0x01);
+
+                    waitCount = ((base_step / 255) / maxSpeed) * 1000000 / waitUnit;
+                    step_wait(waitCount)
+                }
+                nowStepL = mod(nowStepL + continuousLeft, 8);
+                nowStepR = mod(nowStepR + continuousRight, 8);
+            }
+        }
+    })
+    /**
      * set ploterCar parameter
      */
     //* @param step step par mm, eg:8.37
@@ -57,6 +111,8 @@ namespace plotterCar {
     //* @param distance line length(mm), eg:50
     //% block="drow straight line length=%distance"
 	export function Straight (distance: number) {
+        continuousLeft = 0;
+        continuousRight = 0;
 	    execMotor(distance * stepParMm, distance * stepParMm)
 	}
     /**
@@ -68,6 +124,9 @@ namespace plotterCar {
 	export function curve (diameter: number, digree: number) {
 		let insideStep;
 		let outsideStep;
+
+        continuousLeft = 0;
+        continuousRight = 0;
 
 	    if (Math.abs(diameter) <= 1) {
 	        outsideStep = (circleParStep + circleParStep) * (digree / 360)
@@ -88,6 +147,9 @@ namespace plotterCar {
     //* @param digree digree(°), eg:180
     //% block="rotate a car digree=%digree"
 	export function Rotate (digree: number) {
+        continuousLeft = 0;
+        continuousRight = 0;
+
 	    execMotor(digree / 360 * circleParStep, digree / -360 * circleParStep)
 	}
 	function execMotor (leftStep: number, rightStep: number) {
@@ -100,7 +162,7 @@ namespace plotterCar {
 	    motor_l((step_l >> 3) & 0x01, (step_l >> 2) & 0x01, (step_l >> 1) & 0x01, (step_l >> 0) & 0x01);
 		step_r = motor_step[nowStepR];
 	    motor_r((step_r >> 3) & 0x01, (step_r >> 2) & 0x01, (step_r >> 1) & 0x01, (step_r >> 0) & 0x01);
-	    step_wait(waitStep)
+	    step_wait(waitCount)
 
 	// バックラッシュ処理
         backlashProc(leftStep,rightStep);
@@ -115,7 +177,7 @@ namespace plotterCar {
 	        motor_r((step_r >> 3) & 0x01, (step_r >> 2) & 0x01, (step_r >> 1) & 0x01, (step_r >> 0) & 0x01);
 
             speed = Math.min(index * accelerationStep,(base_step - index + 1) * accelerationStep);
-            waitCount = Math.max((1 / speed) * 1000000 / waitUnit, waitStep);
+            waitCount = Math.max((1 / speed) * 1000000 / waitUnit, normalWaitCount);
 
 	        step_wait(waitCount)
 	    }
@@ -139,7 +201,7 @@ namespace plotterCar {
 	            }
 	            step_l = motor_step[nowStepL]
 	            motor_l((step_l >> 3) & 0x01, (step_l >> 2) & 0x01, (step_l >> 1) & 0x01, (step_l >> 0) & 0x01);
-	            step_wait(waitStep)
+	            step_wait(normalWaitCount)
 	        }
 	    }
 	    if (lastRight * rightStep <= 0) {     // 動作方向が前回と変わっていたらバックラッシュ処理をする
@@ -151,7 +213,7 @@ namespace plotterCar {
 	            }
 	            step_r = motor_step[nowStepR]
 	            motor_r((step_r >> 3) & 0x01, (step_r >> 2) & 0x01, (step_r >> 1) & 0x01, (step_r >> 0) & 0x01);
-	            step_wait(waitStep)
+	            step_wait(normalWaitCount)
 	        }
 	    }
 
