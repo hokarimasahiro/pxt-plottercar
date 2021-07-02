@@ -54,7 +54,7 @@ namespace plotterCar {
         continuousLeft = left;
         continuousRight = right;
     }
-/*    control.inBackground(function () {
+    control.inBackground(function () {
 		let base_step:number;
 		let step_l:number,step_r:number;
         let speed:number,waitCount:number;
@@ -94,7 +94,7 @@ namespace plotterCar {
                 nowStepR = mod(nowStepR + continuousRight, 8);
             }
         }
-    })*/
+    })
     /**
      * set ploterCar parameter
      */
