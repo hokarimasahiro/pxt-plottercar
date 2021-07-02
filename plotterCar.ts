@@ -16,7 +16,7 @@ namespace plotterCar {
 
 	let backLashCount = 1;
     let normalSpeed = 1000;     // Hz
-    let maxSpeed = 40000;        // Hz
+    let maxSpeed = 2000;        // Hz
     let lowSpeed = 100;         // Hz
     let accelerationStep = 5;   // Hz
     let waitUnit = 50 ;         // uS
@@ -88,7 +88,7 @@ namespace plotterCar {
                     motor_r((step_r >> 3) & 0x01, (step_r >> 2) & 0x01, (step_r >> 1) & 0x01, (step_r >> 0) & 0x01);
 
                     waitCount = ((base_step / 1023) / maxSpeed) * 1000000 / waitUnit;
-//                    step_wait(waitCount)
+                    step_wait(waitCount)
                 }
                 nowStepL = mod(nowStepL + continuousLeft, 8);
                 nowStepR = mod(nowStepR + continuousRight, 8);
