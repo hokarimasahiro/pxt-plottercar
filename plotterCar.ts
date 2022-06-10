@@ -33,16 +33,16 @@ namespace plotterCar {
         for(let i=0;i<count;i++) control.waitMicros(waitUnit);
 	}
 	function motor_l (ap: number, am: number, bp: number, bm: number) {
-	    pins.digitalWritePin(DigitalPin.P0, ap)
-	    pins.digitalWritePin(DigitalPin.P1, am)
-	    pins.digitalWritePin(DigitalPin.P2, bp)
-	    pins.digitalWritePin(DigitalPin.P13, bm)
+	    pins.digitalWritePin(DigitalPin.P1, ap)
+	    pins.digitalWritePin(DigitalPin.P2, am)
+	    pins.digitalWritePin(DigitalPin.P8, bp)
+	    pins.digitalWritePin(DigitalPin.P12, bm)
 	}
 	function motor_r (ap: number, am: number, bp: number, bm: number) {
 	    pins.digitalWritePin(DigitalPin.P16, ap)
-	    pins.digitalWritePin(DigitalPin.P14, am)
-	    pins.digitalWritePin(DigitalPin.P12, bp)
-	    pins.digitalWritePin(DigitalPin.P8, bm)
+	    pins.digitalWritePin(DigitalPin.P15, am)
+	    pins.digitalWritePin(DigitalPin.P14, bp)
+	    pins.digitalWritePin(DigitalPin.P13, bm)
 	}
     /**
      * continuous operation
